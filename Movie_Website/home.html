@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Home</title>
+  <meta name="description" content="Strona o filmach" />
+  <meta name="keywords" content="filmy, ranking, obejrzeć" />
+  <meta name="robots" content="nofollow" />
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+  <div id="logo">
+    <img src="images/Logo.png" />
+  </div>
+  <nav>
+    <ul>
+      <li>
+        <input class="input" id="searchedMovies" type="search" name="search" placeholder="Poszukiwany film" />
+        <input class="button search pointer" type="submit" value="Szukaj" onclick="goToMovies()" />
+        <br>
+      </li>
+      <li><button class="button page pointer" onclick="goToHome()" style="width:auto;">Strona główna</button></li>
+      <li><button class="button page pointer" onclick="goToMovies()" style="width:auto;">Filmy</button></li>
+      <li><button class="button page pointer" onclick="ifLogged()" style="width:auto;">Konto</button></li>
+      <li><button class="button log pointer" id="buttonLog" type="submit" onclick="ifLoginOrLogout()">Zaloguj</button></li>
+    </ul>
+  </nav>
+
+  <!-- Home -->
+  <div class="modal modal_desc" id="modalHome" style="display:block">
+    <h2>
+      <em>Witaj na stronie The MovieLovers!</em>
+    </h2>
+    <p>
+      Mamy nadzieję, że nie znalazłeś się na niej przypadkowo ;)
+    </p>
+    <p>
+      Jeśli jednak nie znasz tej strony, pozwól, że ci ją przybliżymy:
+    </p>
+    <p style="text-align:center">
+      Nasza strona pozwoli ci na znalezienie podstawowych informacji na temat filmów, które Cię interesują.
+      Wystarczy, że użyjesz wyszukiwarki w górnej części okna.
+    </p>
+    <p>
+      Jeżeli jednak jesteś zainteresowany dodatkowymi funkcjami, które nasza strona ma do zaoferowania, wybierz przycisk "Zaloguj", dzięki któremu masz możliwość zarejestrowania się na naszej stronie lub zalogowania się na już istniejące konto.
+    </p>
+    <p>
+      Posiadając własne konto, zyskujesz możliwość:
+    <p>
+      wystawienia oceny wybranemu filmowi,<br />
+      przejrzenia listy ocenionych przez Ciebie filmów,<br />
+      poproszenia naszą stronę o zarekomendowanie filmów specjalnie dla Ciebie.<br />
+    </p>
+    <br />
+    </p>
+    <p style="color: #4e5b60">
+      Autorami strony internetowej są: <br />
+      <cite>
+        Oskar Karczewski,
+        Anna Korpys,
+        Stanisław Kowalczyk,
+        Grzegorz Matczak
+      </cite><br />
+    </p>
+    <p style="color: #4e5b60">
+      Witryna ta powstała w ramach pracy inżynierskiej, której autorami są wyżej wymienieni studenci Politechniki Poznańskiej.
+    </p>
+  </div>
+
+  <!-- Image loader -->
+  <div id="loader">
+    <img src="images/reload.gif">
+  </div>
+
+  <!-- Movies -->
+  <div class="modal" id="modalMovies">
+  </div>
+
+  <!-- User Account -->
+  <div class="modal modal_desc" id="modalAccount">
+    <p>
+      Zaloguj się by mieć dostęp do:
+    <p>
+      oceniania filmów, <br />
+      przejrzenia listy z obejrzanymi już filmami,<br />
+      proponowanych filmów.<br />
+    </p>
+    </p>
+    <button class="button log pointer" onclick="document.getElementById('login_container').style.display='block'">Zaloguj</button>
+  </div>
+
+  <!-- zalogowany -->
+  <div class="modal" id="logged_container">
+    <div class="btn_group_logged">
+      <button class="button pointer" type="submit" onclick="getWatchedMovies()">Obejrzane filmy</button>
+      <button class="button pointer" type="submit" onclick="getMovieToWatch()">Zaproponuj mi film</button>
+    </div>
+    <div id='watchedMovies'></div>
+    <div id='movieToWatch'></div>
+  </div>
+
+  <!-- logowanie -->
+  <div class="modal login" id="login_container">
+    <div class="modal-form">
+      <div class="container">
+        <label for="uname"><b>Nazwa użytkownika</b></label>
+        <input class="input" id="username" type="username" name="uname" placeholder="Wpisz nazwę użytkownika" required>
+      </div>
+      <div class="container">
+        <label for="password1"><b> Hasło</b></label>
+        <input class="input" id="password" type="password" name="password1" placeholder="Wpisz swoje hasło" required>
+      </div>
+      <div class="container">
+        <button class="button log pointer" type="submit" onclick="loginFunction()">Zaloguj</button>
+        <button class="button log pointer" type="submit" onclick="document.getElementById('register_container').style.display='block', document.getElementById('login_container').style.display='none'">Zarejestruj</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rejestracja -->
+  <div class="modal login" id="register_container">
+    <div class="modal-form">
+      <div class="container">
+        <label for="username"><b>Nazwa użytkownika</b></label>
+        <input class="input" id="user_name" type="username" name="username" placeholder="Wpisz nazwę użytkownika" required>
+      </div>
+      <div class="container">
+        <label for="email"><b>Adres e-mail</b></label>
+        <input class="input" id="e_mail" type="email" name="email" placeholder="Wpisz swój adres e-mail" required>
+      </div>
+      <div class="container">
+        <label for="password1"><b>Hasło</b></label>
+        <input class="input" id="password1" type="password" name="password1" placeholder="Wpisz hasło (min 8 znaków)" required>
+      </div>
+      <div class="container">
+        <label for="password2"><b>Powtórzone hasło</b></label>
+        <input class="input" id="password2" type="password" name="password1" placeholder="Powtórz hasło" required>
+      </div>
+      <div class="container">
+        <button class="button log pointer" type="submit" onclick="registerFunction()">Zarejestruj</button>
+        <button class="button back pointer" type="submit" onclick="document.getElementById('login_container').style.display='block', document.getElementById('register_container').style.display='none'">Cofnij</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    /* funkcja do okien logowania/rejestracji jak się kliknie poza nimi */
+    var modal = document.getElementById('login_container'),
+      modal2 = document.getElementById('register_container');
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+        document = document.getElementById("username").value = "";
+        document = document.getElementById("password").value = "";
+        document = document.getElementById("user_name").value = "";
+        document = document.getElementById("e_mail").value = "";
+        document = document.getElementById("password1").value = "";
+        document = document.getElementById("password2").value = "";
+      } else if (event.target == modal2) {
+        modal2.style.display = "none";
+        document = document.getElementById("username").value = "";
+        document = document.getElementById("password").value = "";
+        document = document.getElementById("user_name").value = "";
+        document = document.getElementById("e_mail").value = "";
+        document = document.getElementById("password1").value = "";
+        document = document.getElementById("password2").value = "";
+      }
+    }
+
+    if (window.localStorage.getItem('accessToken')) {
+      document.getElementById("buttonLog").innerHTML = "Wyloguj";
+    }
+
+    if (window.localStorage.getItem('todo') === "account") {
+      ifLogged();
+    }
+
+    /* dodanie spacji między słowami */
+    function replace(text) {
+      var newtext = text.replaceAll(",", ", ");
+      return newtext;
+    }
+
+    /* pobieranie filmów - FILMY */
+    function getMovies(searched) {
+      var searched = document.getElementById("searchedMovies").value;
+      var sort = "True"; // 'True' sorts movies by rating in descending order
+      $.ajax({
+        type: "GET",
+        url: "http://127.0.0.1:8000/api/movies",
+        dataType: "json",
+        data: {
+          "genres": "",
+          "originaltitle": searched,
+          "avgratingimdb": sort,
+        },
+        beforeSend: function() {
+          $("#loader").show(); // Show image container
+        },
+        success: function(response) {
+          let text = "";
+          let text2 = '<table id="table" class="hover" style="width:100%"><thead><tr><th></th></tr></thead><tbody>'
+          responseJSON = JSON.parse(response);
+          for (let i in responseJSON) {
+            var movieid = responseJSON[i].pk;
+            temp = responseJSON[i].fields;
+            var newGenres = replace(temp.genres);
+            var buttonId = movieid + "more";
+            text += '<tr> <td> <div class="movies"><var class="movie title">' + temp.originaltitle + "<br>";
+            if (temp.polishtitle != temp.originaltitle && temp.polishtitle != null) {
+              text += '<var class="movie description">polski tytuł: </var>' + '<var class="movie">' + temp.polishtitle + '</var>' + "<br>";
+            }
+            text += '<var class="movie description">gatunki: </var>' + "\xa0\xa0\xa0\xa0\xa0\xa0" + '<var class="movie">' + newGenres + '</var>';
+            text += '<var class="movie description">rok: </var>' + '<var class="movie">' + temp.year + '</var>';
+            text += '<var class="movie description">średnia ocena: </var>' + '<var class="movie">' + temp.avgratingimdb + '</var>' + "<br>";
+            text += '<div id="' + movieid + '" style="text-align:justify"></div>'; // do wstawienia dodatkowych informacji
+            text += '<div class="btn-group">' +
+              '<button type="button" class="btn-star pointer" id="note1" onclick="sendMovieNote(\'' + movieid + '\',' + '1)">1</button> ' +
+              '<button type="button" class="btn-star pointer" id="note2" onclick="sendMovieNote(\'' + movieid + '\',' + '2)">2</button> ' +
+              '<button type="button" class="btn-star pointer" id="note3" onclick="sendMovieNote(\'' + movieid + '\',' + '3)">3</button> ' +
+              '<button type="button" class="btn-star pointer" id="note4" onclick="sendMovieNote(\'' + movieid + '\',' + '4)">4</button> ' +
+              '<button type="button" class="btn-star pointer" id="note5" onclick="sendMovieNote(\'' + movieid + '\',' + '5)">5</button> ' +
+              '<button type="button" class="btn-star pointer" id="note6" onclick="sendMovieNote(\'' + movieid + '\',' + '6)">6</button> ' +
+              '<button type="button" class="btn-star pointer" id="note7" onclick="sendMovieNote(\'' + movieid + '\',' + '7)">7</button> ' +
+              '<button type="button" class="btn-star pointer" id="note8" onclick="sendMovieNote(\'' + movieid + '\',' + '8)">8</button> ' +
+              '<button type="button" class="btn-star pointer" id="note9" onclick="sendMovieNote(\'' + movieid + '\',' + '9)">9</button> ' +
+              '<button type="button" class="btn-star pointer" id="note10" onclick="sendMovieNote(\'' + movieid + '\',' + '10)">10</button> </div>' + "<br>";
+            text += '<button class="button log pointer" id="' + buttonId + '" type="submit" onclick="getMovieDesc(\'' + movieid + '\')">Więcej informacji</button>';
+            text2 += text + "</div></td></tr>";
+            text = "";
+          }
+          text2 += "</tbody></table>";
+          document.getElementById("modalMovies").innerHTML = text2;
+          $('#table').DataTable({
+            "ordering": false,
+            "lengthMenu": [5, 10, 25, 50, 75, 100],
+            "language": {
+              "processing": "Przetwarzanie...",
+              "search": "Filtruj:",
+              "lengthMenu": "Pokaż _MENU_ filmów",
+              "info": "Filmy od _START_ do _END_ z _TOTAL_ łącznie",
+              "infoEmpty": "Filmów 0 z 0 dostępnych",
+              "infoFiltered": "(filtrowanie spośród _MAX_ dostępnych filmów)",
+              "loadingRecords": "Wczytywanie...",
+              "zeroRecords": "Nie znaleziono pasujących filmów",
+              "paginate": {
+                "first": "Pierwsza",
+                "previous": "Poprzednia",
+                "next": "Następna",
+                "last": "Ostatnia"
+              },
+            }
+          });
+        },
+        complete: function(data) {
+          $("#loader").hide();
+        },
+        error: function(response) {
+          alert("Wystąpił błąd, przepraszamy.")
+          console.log(response);
+        }
+      });
+    }
+
+    /* pobieranie opisu filmu wg id filmu */
+    function getMovieDesc(movieid) {
+      var buttonId = movieid + "more";
+      const buttonMovieId = document.getElementById(`${buttonId}`);
+      if (buttonMovieId.innerHTML === "Więcej informacji") {
+        $.ajax({
+          type: "GET",
+          url: "http://127.0.0.1:8000/api/movies/info",
+          dataType: "json",
+          data: {
+            "titleId": movieid,
+          },
+          success: function(response) {
+            let text = "";
+            for (let i in response) {
+              temp = response[i];
+              var newGenres = replace(temp.genres);
+              var newDirectors = replace(temp.Directors);
+              var newWriters = replace(temp.Writers);
+              var newActors = replace(temp.Actors);
+              var buttonId = movieid + "less";
+              text += '<var class="movie description">\xa0\xa0\xa0liczba ocen:</var>' + "\xa0\xa0\xa0\xa0" + '<var class="movie">' + temp.numVotesImdb + '</var>' + "<br>";
+              text += '<var class="movie description">\xa0\xa0\xa0Reżyseria:</var>' + "\xa0\xa0\xa0\xa0\xa0\xa0" + '<var class="movie">' + newDirectors + '</var>' + "<br>";
+              text += '<var class="movie description">\xa0\xa0\xa0Scenariusz:</var>' + "\xa0\xa0\xa0\xa0" + '<var class="movie">' + newWriters + '</var>' + "<br>";
+              text += '<var class="movie description">\xa0\xa0\xa0Aktorzy:</var>' + "\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0" + '<var class="movie">' + newActors + '</var>' + "<br>";
+            }
+            document.getElementById(`${movieid}`).innerHTML = text;
+            buttonMovieId.innerHTML = "Mniej informacji";
+            console.log(response);
+          },
+          error: function(response) {
+            alert("Wystąpił błąd, przepraszamy.")
+            console.log(response);
+          }
+        });
+      } else {
+        document.getElementById(`${movieid}`).innerHTML = "";
+        buttonMovieId.innerHTML = "Więcej informacji";
+      }
+    }
+
+    /* ocenianie filmów - FILMY */
+    function sendMovieNote(id, note) {
+      if (window.localStorage.getItem('accessToken')) {
+        $.ajax({
+          type: "POST",
+          url: "http://127.0.0.1:8000/api/rating",
+          headers: {
+            'Authorization': `Bearer ${window.localStorage.getItem('accessToken')}`
+          },
+          tokenFlag: true,
+          data: {
+            "titleid": id,
+            "rating": note
+          },
+          success: function(response) {
+            alert("Ocena została zapisana.");
+          },
+          error: handleAjaxError
+        });
+      } else {
+        alert("Ocenianie filmów to opcja dla zalogowanych użytkowników.");
+      }
+    }
+
+    /* pobieranie filmów - KONTO - obejrzane filmy*/
+    function getWatchedMovies() {
+      var user = window.localStorage.getItem('userName');
+      $.ajax({
+        type: "GET",
+        url: "http://127.0.0.1:8000/api/movies",
+        dataType: "json",
+        data: {
+          "username": user,
+          "avgratingimdb": "true"
+        },
+        success: function(response) {
+          console.log(response);
+          let text = "";
+          let text2 = '<table id="table2" class="hover" style="width:100%"><thead><tr><th></th></tr></thead><tbody>';
+          for (let i in response) {
+            var movieid = response[i].titleid;
+            var buttonId = movieid + "more";
+            temp = response[i];
+            var newGenres = replace(temp.genres);
+            text += '<tr> <td> <div class="movies"><var class="movie title">' + temp.originaltitle + "<br>";
+            if (temp.polishtitle != temp.originaltitle && temp.polishtitle != null) {
+              text += '<var class="movie description">polski tytuł: </var>' + '<var class="movie">' + temp.polishtitle + '</var>' + "<br>";
+            }
+            text += '<var class="movie description">gatunki:</var>' + "\xa0\xa0\xa0\xa0\xa0\xa0" + '<var class="movie">' + newGenres + '</var>';
+            text += '<var class="movie description">rok:</var>' + '<var class="movie">' + temp.year + '</var>';
+            text += '<var class="movie description">średnia ocena:</var>' + '<var class="movie">' + temp.avgratingimdb + '</var>';
+            text += '<var class="movie description">moja ocena: </var>' + '<var class="movie">' + temp.usersratings__rating + '</var>' + "<br>";
+            text += '<div id="' + movieid + '" style="text-align:justify"></div>';
+            text += '<button class="button log pointer" id="' + buttonId + '" type="submit" onclick="getMovieDesc(\'' + movieid + '\',' + '10)">Więcej informacji</button>';
+            text2 += text + "</div></td></tr>";
+            text = "";
+          }
+          text2 += "</tbody></table>";
+          document.getElementById("watchedMovies").innerHTML = text2;
+          document.getElementById("movieToWatch").innerHTML = text;
+          $('#table2').DataTable({
+            "ordering": false,
+            "lengthMenu": [5, 10, 25, 50, 75, 100],
+            "language": {
+              "processing": "Przetwarzanie...",
+              "search": "Filtruj:",
+              "lengthMenu": "Pokaż _MENU_ filmów",
+              "info": "Filmy od _START_ do _END_ z _TOTAL_ łącznie",
+              "infoEmpty": "Filmów 0 z 0 dostępnych",
+              "infoFiltered": "(filtrowanie spośród _MAX_ obejrzanych filmów)",
+              "loadingRecords": "Wczytywanie...",
+              "zeroRecords": "Nie masz jeszcze obejrzanych filmów",
+              "paginate": {
+                "first": "Pierwsza",
+                "previous": "Poprzednia",
+                "next": "Następna",
+                "last": "Ostatnia"
+              },
+            }
+          });
+        },
+        error: function(response) {
+          alert("Wystąpił błąd, przepraszamy.")
+          console.log(response);
+        }
+      });
+    }
+
+    /* pobieranie filmów - KONTO - zaproponuj mi film */
+    function getMovieToWatch() {
+      $.ajax({
+        type: "GET",
+        url: "http://127.0.0.1:8000/api/movies/recommend",
+        headers: {
+          'Authorization': `Bearer ${window.localStorage.getItem('accessToken')}`
+        },
+        tokenFlag: true,
+        dataType: "json",
+        success: function(response) {
+          let text = "";
+          let text2 = ""
+          responseJSON = JSON.parse(response);
+          for (let i in responseJSON) {
+            var movieid = responseJSON[i].pk;
+            var buttonId = movieid + "more";
+            temp = responseJSON[i].fields;
+            var newGenres = replace(temp.genres);
+            text += '<div class="movies"><var class="movie title">' + temp.originaltitle + "<br>";
+            if (temp.polishtitle != temp.originaltitle && temp.polishtitle != null) {
+              text += '<var class="movie description">polski tytuł: </var>' + '<var class="movie">' + temp.polishtitle + '</var>' + "<br>";
+            }
+            text += '<var class="movie description">gatunki: </var>' + "\xa0\xa0\xa0\xa0\xa0\xa0" + '<var class="movie">' + newGenres + '</var>';
+            text += '<var class="movie description">rok: </var>' + '<var class="movie">' + temp.year + '</var>';
+            text += '<var class="movie description">średnia ocena: </var>' + '<var class="movie">' + temp.avgratingimdb + '</var>' + "<br>";
+            text += '<div id="' + movieid + '" style="text-align:justify"></div>';
+            text += '<button class="button log pointer" id="' + buttonId + '" type="submit" onclick="getMovieDesc(\'' + movieid + '\',' + '10)">Więcej informacji</button>';
+            text2 += text + "</div>";
+            text = "";
+          }
+          document.getElementById("watchedMovies").innerHTML = text2;
+          document.getElementById("movieToWatch").innerHTML = text;
+          console.log(response);
+        },
+        error: handleAjaxError
+      });
+    }
+
+
+    /* logowanie - ZALOGUJ */
+    function loginFunction() {
+      var username_ = document.getElementById("username").value;
+      var password1_ = document.getElementById("password").value;
+      if (username_ != "" && password1_ != "") {
+        $.ajax({
+          type: "POST",
+          url: "http://127.0.0.1:8000/api/users/token",
+          dataType: "json",
+          data: {
+            "username": username_,
+            "password": password1_
+          },
+          success: function(response) {
+            window.localStorage.setItem('refreshToken', response['refresh']);
+            window.localStorage.setItem('accessToken', response['access']);
+            window.localStorage.setItem('userName', username_);
+            document.getElementById("buttonLog").innerHTML = "Wyloguj";
+            document = document.getElementById("username").value = "";
+            document = document.getElementById("password").value = "";
+            document = document.getElementById('login_container').style.display = 'none';
+            document = document.getElementById('modalAccount').style.display = 'none';
+            ifLogged();
+            alert("Logowanie zakończone powodzeniem.");
+            console.log(response);
+          },
+          error: function(response) {
+            alert("Niepoprawne dane logowania.");
+            console.log(response);
+          }
+        });
+      } else {
+        alert("Wypełnij wszystkie pola.");
+      }
+    }
+
+    /* wylogowywanie - WYLOGUJ */
+    function logoutFunction() {
+      var refresh = window.localStorage.getItem('refreshToken');
+      $.ajax({
+        type: "POST",
+        url: "http://127.0.0.1:8000/api/users/logout",
+        headers: {
+          'Authorization': `Bearer ${window.localStorage.getItem('accessToken')}`
+        },
+        tokenFlag: true,
+        data: {
+          "refresh_token": refresh
+        },
+        success: function(response) {
+          window.localStorage.removeItem('refreshToken');
+          window.localStorage.removeItem('accessToken');
+          window.localStorage.removeItem('userName');
+          document.getElementById("buttonLog").innerHTML = "Zaloguj";
+          document = document.getElementById("logged_container").style.display = 'none';
+          window.location.reload();
+          alert("Zostałeś poprawnie wylogowany z systemu.");
+          console.log(response);
+        },
+        error: handleAjaxError
+      });
+    }
+
+    /* rejestracja - ZAREJESTRUJ */
+    function registerFunction() {
+      var username_ = document.getElementById("user_name").value;
+      var email_ = document.getElementById("e_mail").value;
+      var password1_ = document.getElementById("password1").value;
+      var password2_ = document.getElementById("password2").value;
+      if (username_ != "" && email_ != "" && password1_ != "" && password2_ != "") {
+        if (emailIsValid(email_)) {
+          if (password1_ === password2_) {
+            if (password1_.length >= 8) {
+              $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:8000/api/users/register",
+                data: {
+                  "username": username_,
+                  "email": email_,
+                  "password": password1_
+                },
+                success: function(response) {
+                  alert("Rejestacja zakończona powodzeniem.");
+                  console.log(response);
+                  document = document.getElementById("user_name").value = "";
+                  document = document.getElementById("e_mail").value = "";
+                  document = document.getElementById("password1").value = "";
+                  document = document.getElementById("password2").value = "";
+                  document = document.getElementById('login_container').style.display = 'block';
+                  document = document.getElementById('register_container').style.display = 'none';
+                },
+                error: function(response) {
+                  if (response.status === 400) {
+                    alert("Użytkownik o danym adresie e-mail bądź loginie już istnieje.");
+                  } else {
+                    alert("Rejestacja zakończona niepowodzeniem.");
+                    console.log(response);
+                  }
+                }
+              });
+            } else {
+              alert("Podane hasło jest za krótkie. Musi składać się z co najmniej ośmiu znaków.");
+            }
+          } else {
+            alert("Powtórzone hasło różni się od podanego hasła.");
+          }
+        } else {
+          alert("Niepoprawny adres e-mail.");
+        }
+      } else {
+        alert("Wypełnij wszystkie pola.");
+      }
+    }
+
+    /* sprawdzenie czy poprawny e_mail */
+    function emailIsValid(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    }
+
+    /* sprawdzenie która funkcja potrzebna (przycisk Zaloguj/Wyloguj) */
+    function ifLoginOrLogout() {
+      if (buttonLog.innerHTML === "Zaloguj") {
+        document = document.getElementById('login_container').style.display = 'block';
+      } else {
+        logoutFunction();
+      }
+    }
+
+    /* sprawdzenie czy zalogowany do Konto (przy przejściu do zakładki KONTO) */
+    function ifLogged() {
+      if (window.localStorage.getItem('todo')) {
+        window.localStorage.removeItem('todo');
+        document = document.getElementById('modalHome').style.display = 'none';
+        document = document.getElementById('modalMovies').style.display = 'none';
+        const buttonLog = document.getElementById("buttonLog");
+        if (buttonLog.innerHTML === "Zaloguj") {
+          document = document.getElementById("modalAccount").style.display = 'block';
+        } else {
+          document = document.getElementById("logged_container").style.display = 'block';
+          document.getElementById("movieToWatch").innerHTML = "";
+          document.getElementById("watchedMovies").innerHTML = "";
+        }
+      } else {
+        window.localStorage.setItem('todo', "account");
+        window.location.reload();
+      }
+    }
+
+    /* obsługa błędów (głównie gdy czas accessToken minął) */
+    function handleAjaxError(rs, e) {
+      console.log(rs);
+      if (rs.status == 401) { // kod 401 - czas accessToken minął
+        if (this.tokenFlag) {
+          this.tokenFlag = false;
+          if (obtainAccessTokenWithRefreshToken()) {
+            this.headers["Authorization"] = `Bearer ${window.localStorage.getItem('accessToken')}`
+            $.ajax(this); // calling API endpoint again with new access token
+          } else {
+            window.localStorage.removeItem('refreshToken');
+            window.localStorage.removeItem('accessToken');
+            window.localStorage.removeItem('userName');
+            document.getElementById("buttonLog").innerHTML = "Zaloguj";
+            document = document.getElementById("logged_container").style.display = 'none';
+            window.location.reload();
+            alert("Zostałeś wylogowany z systemu.");
+          }
+        }
+      } else {
+        alert("Wystąpił błąd, przepraszamy.");
+      }
+    }
+
+    /* nowy access token przy użyciu refresh token */
+    function obtainAccessTokenWithRefreshToken() {
+      let flag = true;
+      let formData = new FormData();
+      formData.append('refresh', window.localStorage.getItem('refreshToken'));
+      $.ajax({
+        url: 'http://127.0.0.1:8000/api/users/token/refresh',
+        type: "POST",
+        data: formData,
+        async: false,
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+          window.localStorage.setItem('accessToken', data['access']);
+        },
+        error: function(rs, e) {
+          if (rs.status == 401) {
+            flag = false;
+          } else {
+            alert("Wystąpił błąd, przepraszamy.")
+            console.log(rs);
+          }
+        }
+      });
+      return flag
+    }
+
+    /* przełączanie stron */
+    function goToHome() {
+      document = document.getElementById('modalHome').style.display = 'block';
+      document.getElementById("modalMovies").innerHTML = "";
+      document = document.getElementById('modalMovies').style.display = 'none';
+      document = document.getElementById('modalAccount').style.display = 'none';
+      document = document.getElementById("logged_container").style.display = 'none';
+    }
+
+    function goToMovies() {
+      document = document.getElementById('modalHome').style.display = 'none';
+      document = document.getElementById('modalMovies').style.display = 'block';
+      document.getElementById("modalMovies").innerHTML = "";
+      document = document.getElementById('modalAccount').style.display = 'none';
+      document = document.getElementById("logged_container").style.display = 'none';
+      getMovies();
+    }
+  </script>
+</body>
+</head>
+
+</html>

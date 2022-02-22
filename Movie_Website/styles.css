@@ -1,0 +1,276 @@
+@font-face {
+  font-family: 'Economica', sans-serif, serif;
+  src: url('fonts/Economica 400.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: "Economica", sans-serif, serif;
+  font-size: 80%;
+  background-color: #FFFFFF;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#logo {
+  width: 400px;
+  height: 195px;
+  margin: auto;
+  position: center;
+}
+
+#loader {
+  display: none;
+  border-style: none;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  z-index: 10;
+}
+
+#cite {
+  width: 80%;
+  font-family: Georgia, Times, serif;
+  font-size: 14px;
+  text-align: justify;
+  padding: 10px;
+  line-height: 200%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* style opisów do wyświetlania filmów */
+.movie {
+  width: 80%;
+  font-family: Times, sans-serif, serif;
+  font-style: normal;
+  font-size: 14px;
+  text-align: center;
+  padding: 10px;
+  line-height: 200%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* do tytułu filmu */
+.title {
+  font-size: 16px;
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* pozostałe opisy do filmu */
+.description {
+  width: inherit;
+  text-align: justify;
+  padding: inherit;
+  line-height: inherit;
+  margin-left: auto;
+  margin-right: auto;
+  color: #4e5b60;
+}
+
+/* do oceniania filmów - grupa */
+.btn-group {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+/* do oceniania filmów - pojedynczy */
+.btn-star {
+  color: #4e5b60;
+  background-color: white;
+  border-color: #4e5b60;
+}
+
+.btn-star:hover {
+  color: #f9bc50;
+  background-color: #4e5b60;
+}
+
+/* do głównych "zakładek" */
+.modal {
+  display: none;
+  border-style: none;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* STRONA GŁÓWNA + KONTO (niezalogowany) */
+.modal_desc {
+  width: 80%;
+  font-family: Helvetica, Georgia, Times, serif;
+  font-size: 14px;
+  text-align: center;
+  padding: 10px;
+  line-height: 150%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* FILMY */
+.movies {
+  display: solid;
+  width: 80%;
+  text-align: justify;
+  padding: 10px;
+  line-height: 200%;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #4e5b60;
+}
+
+/* przyciski: obejrzane/zaproponuj */
+.btn_group_logged {
+  padding: 10px;
+}
+
+.btn_group_logged button {
+  background-color: #6495ED;
+  border: 1px solid #6495ED;
+  color: white;
+  padding: 10px;
+  width: 25%;
+  margin-left: inherit;
+  margin-right: inherit;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.btn_group_logged button:hover {
+  background-color: #87CEFA;
+}
+
+/* panel logowania */
+.login {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding-top: 250px;
+}
+
+.modal-form {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.container {
+  padding: 12px;
+}
+
+input[username], input[email], input[password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  display: inline-block;
+}
+
+/* przyciski */
+.button {
+  text-transform: uppercase;
+  background-color: inherit;
+  border: 1px solid #4e5b60;
+  border-color: #4e5b60;
+  color: #4e5b60;
+  padding: 8px 10px;
+  margin: 2px 0;
+}
+
+/* przycisk-cofnij */
+.back:hover {
+  background-color: #4e5b60;
+  color: white;
+}
+
+/* przycisk-szukaj */
+.search {
+  border-style: none;
+  background-color: #87CEFA;
+  color: white;
+}
+
+.search:hover {
+  background-color: #6495ED;
+}
+
+/* przycisk-zakładki */
+.page {
+  float: center;
+  border-style: hidden;
+}
+
+.page:hover {
+  color: #DC143C;
+  border: 1px solid #4e5b60;
+}
+
+/* przycisk-zaloguj/zarejestruj + więcej/mniej informacji */
+.log {
+  border: 1px solid #4e5b60;
+  color: #4e5b60;
+}
+
+.log:hover {
+  background-color: #f9bc50;
+}
+
+/* style na dodatkowe przyciski do głosowania */
+.yes {
+  border: 1px solid #14DC50;
+  background-color: #14DC50;
+  color: white;
+}
+
+.yes:hover {
+  background-color: #0FA53C;
+}
+
+.no {
+  border: 1px solid #DC143C;
+  background-color: #DC143C;
+  color: white;
+}
+
+.no:hover {
+  background-color: #A50F2D;
+}
+
+nav ul {
+  width: 80%;
+  padding: 10px;
+  margin: auto;
+  border-top: 2px solid #4e5b60;
+  border-bottom: 1px solid #4e5b60;
+  text-align: center;
+}
+
+nav li {
+  display: inline;
+  margin: auto;
+}
+
+nav li a {
+  color: #4e5b60;
+  text-transform: uppercase;
+  padding: 15px;
+}
+
+nav li a:hover, a.on {
+  color: #DC143C;
+}
+
+/* oznaczenie, że coś jest klikalne (łapka) */
+.pointer {
+  cursor: pointer;
+}

@@ -1,0 +1,8 @@
+use movie_lovers
+create table users_ratings(
+	connId int identity(1,1) primary key,
+	userId int foreign key references auth_user(id) not null,
+	titleId varchar(12) foreign key references movies(titleId) not null,
+	rating int not null,
+	datetime datetime
+	);

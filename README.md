@@ -40,7 +40,7 @@ Application consists of:
   - REST API (Back-end, Server) which main purpose is to be a go-between Front-end, recommendation system and database.
   - Website (Front-end) which interacts with user and presents them information visually.
 
-Following technologies were use to create web application:
+Following technologies were used to create web application:
   - Microsoft SQL Server - for the creation of database.
   - Python, Django framework and libraries such as scikit-learn, numpy, pandas - for the creation of REST API and recommendation system.
   - HTML, CSS, JavaScript and JQuery libraries - for the creation of website.
